@@ -1,35 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <LangVersion>12.0</LangVersion>
-    <Nullable>disable</Nullable>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <BONELAB_DIR>/Users/evanbassett/Downloads/BONELAB</BONELAB_DIR>
-  </PropertyGroup>
+    
+    <PropertyGroup>
+      <TargetFramework>net6.0</TargetFramework>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <LangVersion>12.0</LangVersion>
+      <Nullable>disable</Nullable>
+      <DefineConstants>MELONLOADER</DefineConstants>
+    </PropertyGroup>
   
-  <ItemGroup>
-    <Reference Include="Il2CppInterop.Runtime">
-      <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\common\BONELAB\MelonLoader\net6\Il2CppInterop.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Il2Cppmscorlib">
-      <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\common\BONELAB\MelonLoader\Il2CppAssemblies\Il2Cppmscorlib.dll</HintPath>
-    </Reference>
-    <Reference Include="Il2CppSLZ.Marrow">
-      <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\common\BONELAB\MelonLoader\Il2CppAssemblies\Il2CppSLZ.Marrow.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\common\BONELAB\MelonLoader\net6\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\common\BONELAB\MelonLoader\Il2CppAssemblies\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\common\BONELAB\MelonLoader\Il2CppAssemblies\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="LavaGang.MelonLoader" Version="0.7.2"/>
+      <PackageReference Include="Il2CppInterop.Runtime" Version="1.5.1"/>
+      <PackageReference Include="HarmonyX" Version="2.10.2"/>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+      
+      <Reference Include="..\References\**\*.dll"/>
+    </ItemGroup>
 
+    <ItemGroup>
+        <GameDirFile Include="../game_dir.txt"/>
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'@(GameDirFile)' != ''">
+        <!-- Read game_dir.txt into property -->
+        <ReadLinesFromFile File="@(GameDirFile)">
+            <Output TaskParameter="Lines" PropertyName="GameDir"/>
+        </ReadLinesFromFile>
+
+        <!-- Copy the built SimpleSerializables dll into game UserLibs folder/dist Thunderstore staging folder -->
+        <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetPath)" DestinationFolder="$(GameDir)\UserLibs"/>
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="../Mod Staging/UserLibs"/>
+    </Target>
+    
 </Project>
