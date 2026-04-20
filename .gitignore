@@ -351,3 +351,6 @@ MigrationBackup/
 .ionide/
 *.DS_Store
 /Mod Staging
+
+game_dir.txt
+.idea/
