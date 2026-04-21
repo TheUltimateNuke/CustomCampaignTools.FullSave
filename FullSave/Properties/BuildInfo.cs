@@ -2,7 +2,7 @@ namespace FullSave
 {
     internal class BuildInfo
     {
-        internal const string Name = "FullSave";
+        internal const string Name = "FullSaveFork";
         internal const string Description = "Save your game at any time";
         internal const string Author = "EvroDev";
         internal const string Company = "";
